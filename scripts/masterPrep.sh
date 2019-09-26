@@ -22,6 +22,7 @@ sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 if hostname -f|grep -- "-0" >/dev/null
 then
    echo $(date) " - Installing Ansible and pyOpenSSL"
+   yum -y --enablerepo=epel groupinstall "Development Tools"
    yum -y --enablerepo=epel install python-pip python-devel python pyOpenSSL
    pip install pip --upgrade
    pip install ansible==2.3.1.0
