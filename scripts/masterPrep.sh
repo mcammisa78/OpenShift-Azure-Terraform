@@ -4,7 +4,6 @@ echo $(date) " - Starting Script"
 
 STORAGEACCOUNT=$1
 SUDOUSER=$2
-LOCATION=$3
 
 # Install EPEL repository
 echo $(date) " - Installing EPEL"
@@ -94,32 +93,18 @@ systemctl start docker
 
 if hostname -f|grep -- "-0" >/dev/null
 then
-cat <<EOF > /home/${SUDOUSER}/scunmanaged.yml
+cat <<EOF > /home/${SUDOUSER}/scgeneric1.yml
 kind: StorageClass
-apiVersion: storage.k8s.io/v1
+apiVersion: storage.k8s.io/v1beta1
 metadata:
   name: generic
   annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
+    storageclass.beta.kubernetes.io/is-default-class: "true"
 provisioner: kubernetes.io/azure-disk
 parameters:
-  location: ${LOCATION}
-  storageAccount: ${STORAGEACCOUNT}
+  storageAccount: ${STORAGEACCOUNT1}
 EOF
 
-cat <<EOF > /home/${SUDOUSER}/scmanaged.yml
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: generic
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-provisioner: kubernetes.io/azure-disk
-parameters:
-  kind: managed
-  location: ${LOCATION}
-  storageaccounttype: Premium_LRS
-EOF
 
 fi
 
